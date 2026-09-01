@@ -1,3 +1,12 @@
+Version 0.0.2
+
+Bug Fix
+
+Fixed edit structure — Getting an error when I try to add or remove a field
+
+Newly added structure fields now omit their temporary UI ID during saving, while existing field IDs remain preserved. This prevents the “does not belong to collection” error.
+
+
 Version: 0.0.1
 
 1st Commit 

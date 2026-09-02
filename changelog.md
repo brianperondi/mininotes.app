@@ -1,3 +1,11 @@
+Version 0.0.3
+
+
+Refactor Feature: Limit default starter collection to Ideas for new users
+
+Updated default app initialization logic in `src/index.html` to only create the "Ideas" collection for first-time users, removing the automatic creation of the "Research" and "Meetings" example collections. Existing local storage state for returning users remains unaffected.
+
+
 Version 0.0.2
 
 Bug Fix

@@ -1,3 +1,15 @@
+Version 0.0.4
+
+Bug Fix
+
+I found a bug in the code — When I added a checklist and would try to add an item , it would just error.
+
+Fixed in [src/index.html (line 69)]
+
+Existing notes weren’t initializing newly added checklist fields, causing .push() to fail. Missing fields now initialize when opening a note, without changing existing values.
+
+All five regression tests pass, including checklist add/edit/save/reopen and related array fields.
+
 Version 0.0.3
 
 

@@ -1,3 +1,7 @@
+Version 0.0.5
+
+Added an Excalidraw field for collection structures. Notes can now create, edit, and save drawings locally as Excalidraw scenes, including embedded image data. The editor loads from browser ESM modules and needs no build system.
+
 Version 0.0.4
 
 Bug Fix

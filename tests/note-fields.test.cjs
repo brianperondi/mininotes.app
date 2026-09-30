@@ -9,7 +9,7 @@ const script = html.match(/<script>([\s\S]*?)<\/script>/)[1];
 
 // Minimal DOM adapter: execute the actual app and its registered event handlers.
 function setup(values = {}) {
-  const fields = ['checklist', 'tags', 'links', 'attachments', 'number', 'short', 'wikipedia']
+  const fields = ['checklist', 'tags', 'links', 'attachments', 'number', 'short', 'wikipedia', 'excalidraw']
     .map(type => ({ id: type, type, label: type }));
   const collection = {
     id: 'collection', name: 'Test', fields,
@@ -101,8 +101,29 @@ test('new notes still initialize every field with its correct empty value', asyn
   app.run('openNoteModal()');
   assert.deepEqual(app.draft(), {
     checklist: [], tags: [], links: [], attachments: [], number: '', short: '',
-    wikipedia: { query: '', results: [] },
+    wikipedia: { query: '', results: [] }, excalidraw: null,
   });
   await app.click('addCheck', 'checklist');
   assert.equal(app.draft().checklist.length, 1);
+});
+
+test('Excalidraw scene saves with a note and reopens unchanged', () => {
+  const app = setup();
+  const scene = {
+    type: 'excalidraw', version: 2, source: 'https://excalidraw.com',
+    elements: [{ id: 'shape', type: 'rectangle', x: 10, y: 20 }],
+    appState: { viewBackgroundColor: '#ffffff' }, files: {},
+  };
+  app.run(`noteDraft.values.excalidraw = ${JSON.stringify(scene)}`);
+  app.run('saveNote()');
+  assert.deepEqual(app.saved().excalidraw, scene);
+  app.run("openNoteModal('note')");
+  assert.deepEqual(app.draft().excalidraw, scene);
+  assert.match(app.run('renderNoteField(activeCollection().fields.at(-1))'), /Edit drawing/);
+});
+
+test('Excalidraw field accepts scenes and rejects unrelated objects', () => {
+  const app = setup();
+  assert.throws(() => app.run("normalizeFieldValue({type:'excalidraw'}, {foo:1}, 'scene')"), /unsupported property/);
+  assert.equal(app.run("normalizeFieldValue({type:'excalidraw'}, null, 'scene')"), null);
 });

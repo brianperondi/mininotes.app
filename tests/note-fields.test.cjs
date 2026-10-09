@@ -43,8 +43,12 @@ function setup(values = {}) {
     run, element, inputs,
     draft: () => JSON.parse(run('JSON.stringify(noteDraft.values)')),
     saved: () => JSON.parse(saved)[0].notes[0].values,
-    click: (action, id, index = 0) => element('#note-fields').onclick({
-      target: { dataset: { [action]: id, index }, closest: () => null },
+    click: (action, id, index = 0, extra = {}) => element('#note-fields').onclick({
+      target: {
+        dataset: { [action]: id, index, ...extra },
+        disabled: extra.disabled ?? false,
+        closest: selector => (action === 'moveCheck' && selector === '[data-move-check]' ? { dataset: { moveCheck: id, index, direction: extra.direction }, disabled: extra.disabled ?? false } : null),
+      },
     }),
   };
 }
@@ -94,6 +98,18 @@ test('opening and cancelling preserves stored values and keeps draft arrays inde
   assert.deepEqual(app.saved(), original);
   app.run("closeModal(noteModal); openNoteModal('note')");
   assert.deepEqual(app.draft().checklist, original.checklist);
+});
+
+test('checklist items can be reordered up and down and order persists on save', async () => {
+  const app = setup({ checklist: [{ text: 'First', done: false }, { text: 'Second', done: true }, { text: 'Third', done: false }] });
+  await app.click('moveCheck', 'checklist', 2, { direction: 'up' });
+  assert.deepEqual(app.draft().checklist.map(row => row.text), ['First', 'Third', 'Second']);
+  await app.click('moveCheck', 'checklist', 0, { direction: 'down' });
+  assert.deepEqual(app.draft().checklist.map(row => row.text), ['Third', 'First', 'Second']);
+  app.run('saveNote()');
+  assert.deepEqual(app.saved().checklist.map(row => row.text), ['Third', 'First', 'Second']);
+  app.run("openNoteModal('note')");
+  assert.deepEqual(app.draft().checklist.map(row => row.text), ['Third', 'First', 'Second']);
 });
 
 test('new notes still initialize every field with its correct empty value', async () => {

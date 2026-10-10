@@ -1,3 +1,12 @@
+Version 0.0.6
+
+Added ability to reorder checklist items with ↑ ↓ buttons. The order is preserved when saving and reopening notes.
+
+Short help text under the checklist label explaining ↑ ↓
+
+Stronger styling on the arrow button group so it’s easier to spot
+Normalization for older checklist data so pre-update notes still render correctly
+
 Version 0.0.5
 
 Added an Excalidraw field for collection structures. Notes can now create, edit, and save drawings locally as Excalidraw scenes, including embedded image data. The editor loads from browser ESM modules and needs no build system.

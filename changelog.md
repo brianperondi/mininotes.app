@@ -1,3 +1,7 @@
+Version 0.0.7
+
+Added MJML email reports for each note card. Generate a report from the card or note editor, preview the compiled HTML, copy MJML or HTML to the clipboard, or download the HTML file for sending updates by email.
+
 Version 0.0.6
 
 Added ability to reorder checklist items with ↑ ↓ buttons. The order is preserved when saving and reopening notes.
